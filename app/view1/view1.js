@@ -12,10 +12,22 @@ angular.module('myApp.view1', [
   });
 }])
 
-.controller('View1Ctrl', ['$scope', function($scope) {
+.controller('View1Ctrl', ['$scope', '$http', function($scope, $http) {
+    $scope.asyncSelected = null;
     $scope.typeaheadResults = [
         "Alessandro",
         "Davide",
         "Francesco"
     ];
+    
+    $scope.getTypeaheadResults = function(query) {
+      return $http.get('/api/user/alediaferia/datasource/git-commands/search?q=' + query + '&auth_token=6e26e7d7af928525cbae238d3d302ab5').
+        then(function(response) {
+            return response.data.map(function(r) {
+                return r.Word;
+            });
+        }, function(response) {
+            return [];
+        });
+    };
 }]);
